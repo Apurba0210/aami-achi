@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Dashboard | Aami Achi</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: #f5f7fa; text-align: center; padding: 1rem; }
+        .status-card { background: white; padding: 3rem 2rem; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); max-width: 450px; width: 100%; transition: border-top 0.3s; }
+        h1 { margin-top: 0; color: #333; font-size: 2rem; }
+        #status-text { font-size: 1.4rem; margin-bottom: 1.5rem; font-weight: bold; line-height: 1.4; }
+        #time-text { color: #666; font-size: 1rem; line-height: 1.5; }
+        .safe { border-top: 10px solid #2e7d32; }
+        .warning { border-top: 10px solid #c62828; }
+        .loading { border-top: 10px solid #9e9e9e; }
+    </style>
+</head>
+<body>
+    <div class="status-card loading" id="status-card">
+        <h1>Aami Achi</h1>
+        <p id="status-text">Checking status...</p>
+        <p id="time-text"></p>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+        async function checkStatus() {
+            const card = document.getElementById('status-card');
+            const statusText = document.getElementById('status-text');
+            const timeText = document.getElementById('time-text');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const familyId = urlParams.get('family');
+
+            if (!familyId) {
+                statusText.textContent = "Please use the dashboard link generated during setup.";
+                statusText.style.color = '#c62828';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/check_ins?family_id=eq.${familyId}&select=created_at&order=created_at.desc&limit=1`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.length === 0) {
+                    card.className = 'status-card warning';
+                    statusText.textContent = 'No check-ins recorded yet.';
+                    statusText.style.color = '#c62828';
+                    return;
+                }
+
+                const lastCheckIn = new Date(data[0].created_at);
+                const diffInHours = (new Date() - lastCheckIn) / (1000 * 60 * 60);
+                const formattedTime = lastCheckIn.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+
+                if (diffInHours < 24) {
+                    card.className = 'status-card safe';
+                    statusText.textContent = '✅ Safe. Check-in recorded.';
+                    statusText.style.color = '#2e7d32';
+                    timeText.textContent = `Last seen: ${formattedTime}`;
+                } else {
+                    card.className = 'status-card warning';
+                    statusText.textContent = '🚨 WARNING: Missed Check-in!';
+                    statusText.style.color = '#c62828';
+                    timeText.textContent = `Last seen: ${formattedTime} (over 24 hours ago)`;
+                }
+
+            } catch (error) {
+                console.error(error);
+                statusText.textContent = 'Error connecting to database.';
+            }
+        }
+
+        checkStatus();
+        setInterval(checkStatus, 300000); // Refresh every 5 mins
+    </script>
+</body>
+</html>

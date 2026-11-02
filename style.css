@@ -1,0 +1,154 @@
+/* ---------- Base reset ---------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+    background-color: #f5f7fa;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* ---------- Bengali-specific typography ---------- */
+body.lang-bn h1 {
+    font-size: 2.8rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    color: #1a3c34;
+}
+
+body.lang-bn p {
+    font-size: 1.4rem;
+    line-height: 1.7;
+    color: #333;
+}
+
+/* The fix for the Bengali button rendering issue */
+body.lang-bn #check-in-btn {
+    font-size: 2rem;
+    line-height: 1.6;
+    padding: 1.5rem 2rem;
+    color: #ffffff;
+}
+
+/* ---------- English typography ---------- */
+body.lang-en h1 {
+    font-size: 2.4rem;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    color: #1a3c34;
+}
+
+body.lang-en p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: #333;
+}
+
+body.lang-en #check-in-btn {
+    font-size: 2.5rem;
+    padding: 2rem 2rem;
+    color: #ffffff;
+}
+
+/* ---------- Main card ---------- */
+.container {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+}
+
+/* ---------- The main button ---------- */
+#check-in-btn {
+    font-family: inherit;
+    width: 100%;
+    border: none;
+    border-radius: 60px;
+    background-color: #2e7d32;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: background-color 0.25s, transform 0.1s;
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.35);
+}
+
+#check-in-btn:hover {
+    background-color: #1b5e20;
+}
+
+#check-in-btn:active {
+    transform: scale(0.98);
+}
+
+#check-in-btn:disabled {
+    background-color: #9e9e9e;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ---------- Status message ---------- */
+#status-message {
+    margin-top: 1.2rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #2e7d32;
+    min-height: 1.5em;
+}
+
+#status-message.error {
+    color: #c62828;
+}
+
+/* ---------- Language toggle (top-right) ---------- */
+.language-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+}
+
+.lang-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #cfd8dc;
+    background: #ffffff;
+    color: #37474f;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: background-color 0.2s;
+}
+
+.lang-btn:hover {
+    background: #eceff1;
+}
+
+.lang-btn.active {
+    background: #2e7d32;
+    color: #ffffff;
+    border-color: #2e7d32;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 420px) {
+    .container {
+        padding: 1.25rem;
+    }
+    body.lang-bn h1 {
+        font-size: 2.2rem;
+    }
+    body.lang-bn #check-in-btn {
+        font-size: 1.7rem;
+    }
+}
