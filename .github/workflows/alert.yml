@@ -1,13 +1,20 @@
+
 name: Aami Achi Alert Check
 
 on:
-  schedule:
-    - cron: '0 * * * *' # Runs at minute 0 of every hour
-  workflow_dispatch: # Allows you to run it manually by clicking a button
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   check-database:
     runs-on: ubuntu-latest
+
+    env:
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
